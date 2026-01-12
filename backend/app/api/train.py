@@ -35,7 +35,7 @@ def train_model(epochs: int = 20, batch_size: int = 500):
         generator_lr=2e-4,
         discriminator_lr=2e-4,
         pac=1,
-        verbose=False
+        verbose=True
     )
 
     model.fit(

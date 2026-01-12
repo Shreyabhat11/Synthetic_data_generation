@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import upload, eda, train, generate, evaluate, download
+from app.api import upload, train, generate, evaluate, download
 
 app = FastAPI()
 
-# CORS Middleware (for React frontend)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], 
