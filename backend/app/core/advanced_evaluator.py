@@ -6,10 +6,15 @@ from scipy.stats import entropy
 
 def compute_mse(real_df, synth_df):
     num_cols = real_df.select_dtypes(include=np.number).columns
-    return float(mean_squared_error(
-        real_df[num_cols].mean(),
-        synth_df[num_cols].mean()
-    ))
+
+    real_mean = real_df[num_cols].mean()
+    synth_mean = synth_df[num_cols].mean()
+
+    # normalize by variance
+    variance = real_df[num_cols].var() + 1e-8
+
+    return float(((real_mean - synth_mean) ** 2 / variance).mean())
+
 
 
 def compute_kl_divergence(real_df, synth_df, bins=20):
@@ -36,5 +41,8 @@ def compute_correlation_difference(real_df, synth_df):
     return float(np.nanmean(diff))
 
 
-def compute_statistical_similarity(mse, kl):
-    return float(np.exp(-(mse + kl)))
+def compute_statistical_similarity(mse, kl, corr_diff):
+    return float(
+        1 / (1 + mse + kl + corr_diff)
+    )
+

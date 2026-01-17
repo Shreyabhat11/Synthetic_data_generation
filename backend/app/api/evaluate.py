@@ -47,7 +47,7 @@ def evaluate():
     mse = compute_mse(real_df, synth_df)
     kl = compute_kl_divergence(real_df, synth_df)
     corr_diff = compute_correlation_difference(real_df, synth_df)
-    stat_sim = compute_statistical_similarity(mse, kl)
+    stat_sim = compute_statistical_similarity(mse, kl, corr_diff)
 
     privacy = disclosure_risk(real_df, synth_df)
 
