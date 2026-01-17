@@ -34,9 +34,9 @@ backend/
 
 ---
 
-## 🧠 Methodology Overview
+##  Methodology Overview
 
-### 1️⃣ Synthetic Data Generation
+### 1️ Synthetic Data Generation
 
 * Model: **CTGAN (Conditional Tabular GAN)**
 * Handles:
@@ -49,7 +49,7 @@ backend/
   * Log-transformation (`log1p`) for skewed numerical columns
   * Explicit categorical column detection
 
-### 2️⃣ Utility Evaluation (TSTR)
+### 2️ Utility Evaluation (TSTR)
 
 **Train on Synthetic, Test on Real**
 
@@ -62,7 +62,7 @@ backend/
 
   * Measures how well synthetic data preserves predictive structure
 
-### 3️⃣ Privacy Evaluation
+### 3️ Privacy Evaluation
 
 * Disclosure-based privacy metrics
 * Quantifies similarity and re-identification risk
@@ -70,7 +70,7 @@ backend/
 
 ---
 
-## 📊 Metrics Used
+##  Metrics Used
 
 | Category      | Metric                                     |
 | ------------- | ------------------------------------------ |
@@ -81,7 +81,7 @@ backend/
 
 ---
 
-## 🔁 Privacy–Utility Tradeoff
+##  Privacy–Utility Tradeoff
 
 This platform explicitly highlights the **privacy–utility tradeoff**:
 
@@ -92,7 +92,7 @@ The dashboard enables practitioners to **balance both objectives** based on use-
 
 ---
 
-## ⚙️ Tech Stack
+##  Tech Stack
 
 ### Backend
 
@@ -111,7 +111,7 @@ The dashboard enables practitioners to **balance both objectives** based on use-
 
 ---
 
-## 🧪 Running the Project Locally
+##  Running the Project Locally
 
 ### Backend
 
@@ -133,7 +133,7 @@ npm run dev
 
 ---
 
-## 📈 Example Use Cases
+##  Example Use Cases
 
 * Privacy-preserving data sharing
 * Synthetic datasets for ML model development
@@ -142,7 +142,7 @@ npm run dev
 
 ---
 
-## 🚧 Limitations
+##  Limitations
 
 * GAN training is computationally intensive
 * Tradeoff between training speed and data fidelity
@@ -151,7 +151,7 @@ npm run dev
 
 ---
 
-## 🔮 Future Enhancements
+##  Future Enhancements
 
 * Differential Privacy integration (DP-CTGAN)
 * Async training jobs (Celery / background workers)
@@ -161,10 +161,8 @@ npm run dev
 
 ---
 
-## 👩‍💻 Author
+##  Author
 
 **Shreya Bhat**
 📧 [shreyabhat545@gmail.com](mailto:shreyabhat545@gmail.com)
 🎓 Capstone Project – Synthetic Data Generation & Evaluation
-
-Just tell me 👍
