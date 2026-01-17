@@ -20,7 +20,7 @@ def generate(req: GenerateRequest):
     if STATE.model is None:
         raise HTTPException(400, "Model not trained")
 
-    synthetic_df = STATE.model.sample(req.num_rows, random_state=42, temperature=0.8)
+    synthetic_df = STATE.model.sample(req.num_rows)
     # Inverse transform numerical columns if any transformation was applied
     num_cols = STATE.dataframe.select_dtypes(
         include=["number", "float", "int"]

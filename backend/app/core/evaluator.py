@@ -1,3 +1,4 @@
+import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
@@ -5,14 +6,14 @@ from sklearn.metrics import roc_auc_score
 
 
 def evaluate_tstr(real_df, synthetic_df, target_col, model):
-    # Split features & target properly
+    # Split features & target
     Xs = synthetic_df.drop(columns=[target_col])
-    ys = synthetic_df[target_col]        # 1D Series
+    ys = synthetic_df[target_col]
 
     Xr = real_df.drop(columns=[target_col])
-    yr = real_df[target_col]              # 1D Series
+    yr = real_df[target_col]
 
-    # Detect categorical & numeric columns
+    # Detect column types
     cat_cols = Xs.select_dtypes(include=["object", "category"]).columns.tolist()
     num_cols = Xs.select_dtypes(exclude=["object", "category"]).columns.tolist()
 
@@ -30,13 +31,25 @@ def evaluate_tstr(real_df, synthetic_df, target_col, model):
         ]
     )
 
-    # Train on synthetic
+    # Train on synthetic data
     pipeline.fit(Xs, ys)
 
-    # Predict probability for positive class only
-    y_pred_proba = pipeline.predict_proba(Xr)[:, 1]
+    # Predict probabilities
+    y_pred_proba = pipeline.predict_proba(Xr)
 
-    # Binary ROC-AUC
-    auc = roc_auc_score(yr, y_pred_proba)
+    n_classes = len(np.unique(yr))
+
+    # ---- Binary classification ----
+    if n_classes == 2:
+        auc = roc_auc_score(yr, y_pred_proba[:, 1])
+
+    # ---- Multiclass classification ----
+    else:
+        auc = roc_auc_score(
+            yr,
+            y_pred_proba,
+            multi_class="ovr",
+            average="macro"
+        )
 
     return float(auc)

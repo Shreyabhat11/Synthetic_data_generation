@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 @router.post("/")
-def train_model(epochs: int = 15, batch_size: int = 500):
+def train_model(epochs: int = 15, batch_size: int = 512):
 
     if STATE.dataframe is None:
         raise HTTPException(400, "No dataset uploaded")
@@ -35,7 +35,6 @@ def train_model(epochs: int = 15, batch_size: int = 500):
     df[number_columns] = df[number_columns].fillna(0)
     df[categorical_columns] = df[categorical_columns].fillna("Unknown")
 
-    
 
     for col in number_columns:
         if (df[col] >= 0).all():
@@ -47,11 +46,9 @@ def train_model(epochs: int = 15, batch_size: int = 500):
         batch_size=batch_size,
         generator_lr=2e-4,
         discriminator_lr=2e-4,
-        pac=1,
+        pac=8,
         verbose=True
     )
-
-
 
     model.fit(
         df,

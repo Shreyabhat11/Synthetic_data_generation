@@ -41,7 +41,7 @@ def evaluate():
         real_df,
         synth_df,
         target_col,
-        RandomForestClassifier()
+        RandomForestClassifier(n_estimators=100, random_state=42)
     )
 
     mse = compute_mse(real_df, synth_df)
