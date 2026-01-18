@@ -19,7 +19,8 @@ import { toast } from 'sonner';
 
 export default function Privacy() {
   const navigate = useNavigate();
-  const [risk, setRisk] = useState(null);
+
+  const [privacy, setPrivacy] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -29,7 +30,7 @@ export default function Privacy() {
 
     try {
       const res = await ctganAPI.getPrivacyMetrics();
-      setRisk(res.privacy.disclosure_risk);
+      setPrivacy(res.privacy);
       toast.success('Privacy metrics loaded');
     } catch (err) {
       console.error(err);
@@ -43,6 +44,8 @@ export default function Privacy() {
   useEffect(() => {
     fetchPrivacy();
   }, []);
+
+  /* ---------------- Loading / Error ---------------- */
 
   if (loading) {
     return (
@@ -62,8 +65,12 @@ export default function Privacy() {
     );
   }
 
-  /* ---------- Derived Metrics ---------- */
-  const privacyScore = Math.max(0, 1 - risk);
+  if (!privacy) return null;
+
+  /* ---------------- Derived Metrics ---------------- */
+
+  const risk = privacy.disclosure_risk;
+  const privacyScore = privacy.privacy_score;
   const riskPercent = (risk * 100).toFixed(2);
 
   let level = 'High Risk';
@@ -88,6 +95,8 @@ export default function Privacy() {
     { label: 'Safe Records', value: Math.round((1 - risk) * 1000) },
     { label: 'Risk-Prone Records', value: Math.round(risk * 1000) },
   ];
+
+  /* ---------------- UI ---------------- */
 
   return (
     <div className="min-h-screen bg-background">
@@ -121,7 +130,7 @@ export default function Privacy() {
             ) : (
               <AlertTriangle className="w-8 h-8 text-warning" />
             )}
-            <div className="flex-1">
+            <div>
               <h3 className="text-xl font-semibold">
                 Overall Privacy Level: {level}
               </h3>
@@ -150,7 +159,7 @@ export default function Privacy() {
           />
         </div>
 
-        {/* Charts */}
+        {/* Chart */}
         <div className="grid lg:grid-cols-2 gap-6 mb-8">
           <Chart
             title="Record Risk Distribution"
@@ -163,7 +172,7 @@ export default function Privacy() {
           />
         </div>
 
-        {/* Detailed Table */}
+        {/* Table */}
         <Card className="p-6 mb-8">
           <h3 className="text-lg font-semibold mb-4">
             Detailed Privacy Assessment
@@ -180,38 +189,19 @@ export default function Privacy() {
             </thead>
             <tbody>
               <tr>
-                <td className="font-medium">Disclosure Risk</td>
+                <td>Disclosure Risk</td>
                 <td>{risk.toFixed(4)}</td>
                 <td>&lt; 0.10</td>
-                <td>
-                  <span className={`status-badge ${color}`}>
-                    {level}
-                  </span>
-                </td>
+                <td><span className={`status-badge ${color}`}>{level}</span></td>
               </tr>
               <tr>
-                <td className="font-medium">Privacy Score</td>
+                <td>Privacy Score</td>
                 <td>{privacyScore.toFixed(4)}</td>
                 <td>&gt; 0.70</td>
-                <td>
-                  <span className="status-badge success">Pass</span>
-                </td>
+                <td><span className="status-badge success">Pass</span></td>
               </tr>
             </tbody>
           </table>
-        </Card>
-
-        {/* Privacy Strength */}
-        <Card className="p-6 mb-8">
-          <h3 className="text-lg font-semibold mb-3">
-            Privacy Interpretation
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            Your synthetic data demonstrates a low probability of identity
-            disclosure. This indicates strong anonymization and makes the data
-            suitable for testing, analytics, and machine learning without
-            exposing sensitive personal information.
-          </p>
         </Card>
 
         {/* Progress */}

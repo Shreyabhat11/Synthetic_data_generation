@@ -5,7 +5,7 @@ import os
 from sklearn.ensemble import RandomForestClassifier
 
 from app.core.evaluator import evaluate_tstr
-from app.core.privacy_metrics import disclosure_risk
+from app.core.privacy_metrics import disclosure_risk, normalize_disclosure_risk
 from app.core.advanced_evaluator import (
     compute_mse,
     compute_kl_divergence,
@@ -49,7 +49,9 @@ def evaluate():
     corr_diff = compute_correlation_difference(real_df, synth_df)
     stat_sim = compute_statistical_similarity(mse, kl, corr_diff)
 
-    privacy = disclosure_risk(real_df, synth_df)
+    privacy_dist = disclosure_risk(real_df, synth_df)
+    privacy_score = normalize_disclosure_risk(privacy_dist)
+
 
     # ---- Distribution data (top 5 numeric cols) ----
     num_cols = real_df.select_dtypes(include="number").columns[:5]
@@ -85,7 +87,8 @@ def evaluate():
             "statistical_similarity": round(stat_sim, 4)
         },
         "privacy": {
-            "disclosure_risk": round(privacy, 4)
+            "disclosure_risk": round(privacy_dist, 4),
+            "privacy_score": round(privacy_score, 4)
         },
         "distributions": distributions,
         "correlation_comparison": corr_pairs

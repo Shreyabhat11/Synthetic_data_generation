@@ -23,7 +23,7 @@ def disclosure_risk(real_df, synthetic_df, n_neighbors=1):
     real_enc = preprocessor.fit_transform(real_df)
     synth_enc = preprocessor.transform(synthetic_df)
 
-    # Nearest neighbor search (NO full distance matrix)
+    # Nearest neighbor search
     nn = NearestNeighbors(
         n_neighbors=n_neighbors,
         metric="euclidean",
@@ -35,3 +35,12 @@ def disclosure_risk(real_df, synthetic_df, n_neighbors=1):
     distances, _ = nn.kneighbors(real_enc, return_distance=True)
 
     return float(np.mean(distances))
+
+def normalize_disclosure_risk(distance, scale=5.0):
+    """
+    Converts unbounded distance into [0,1] privacy score
+    Higher = better privacy
+    """
+    score = 1 - np.exp(-distance / scale)
+    return float(np.clip(score, 0, 1))
+

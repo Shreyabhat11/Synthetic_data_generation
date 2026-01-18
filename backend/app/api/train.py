@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 @router.post("/")
-def train_model(epochs: int = 15, batch_size: int = 512):
+def train_model(epochs: int = 20, batch_size: int = 512):
 
     if STATE.dataframe is None:
         raise HTTPException(400, "No dataset uploaded")
@@ -32,10 +32,11 @@ def train_model(epochs: int = 15, batch_size: int = 512):
         include=["number", "float", "int"]
     ).columns.tolist()
 
+    # ---- 1. Handle missing values ----
     df[number_columns] = df[number_columns].fillna(0)
     df[categorical_columns] = df[categorical_columns].fillna("Unknown")
 
-
+    # ---- 2 Apply log1p transformation to numerical columns ----
     for col in number_columns:
         if (df[col] >= 0).all():
             df[col] = np.log1p(df[col])
